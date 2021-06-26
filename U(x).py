@@ -45,23 +45,23 @@ def U(m, x0):
          [0, 0, 0, 1] * len(x0)] * (len(x0) - 1) * 4
     S = np.array(S)
     alfa_iter = S.dot(beta)
-    #x, U_iter = [], []
+    # x, U_iter = [], []
     for i in range(len(x0) - 1):
         alfa = alfa_iter[i * 4:i * 4 + 4]
-        #alfa = [3] * 4
+        # alfa = [3] * 4
         delta_x = x0[i + 1] - x0[i]
-        #x = x + [delta_x * xx/m + x0[i] for xx in range(m+1)]
-        #U_iter = U_iter + U0(delta_x, m, A, alfa)
+        # x = x + [delta_x * xx/m + x0[i] for xx in range(m+1)]
+        # U_iter = U_iter + U0(delta_x, m, A, alfa)
         plt.plot([delta_x * xx/m + x0[i] for xx in range(m+1)], U0(delta_x, m, A, alfa))
-    #return x, U_iter
+    # return x, U_iter
 
 
 M = 100
 k = 1 + int(5 * rnd()) + 3
 x0 = [rnd() + i for i in range(k)]
 U(M, x0)
-#x_iter, y_iter = U(M, x0)
-#plt.axis([x0[0], x0[-1], min(y_iter), max(y_iter)])
-#plt.plot(x_iter, y_iter, 'k')
-#plt.plot(x0, [(min(y_iter)+max(y_iter))/2] * len(x0), 'ro')
+# x_iter, y_iter = U(M, x0)
+# plt.axis([x0[0], x0[-1], min(y_iter), max(y_iter)])
+# plt.plot(x_iter, y_iter, 'k')
+# plt.plot(x0, [(min(y_iter)+max(y_iter))/2] * len(x0), 'ro')
 plt.show()
