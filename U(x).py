@@ -11,26 +11,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 from random import random as rnd
 
-def F00(x, a):
+def F0(x, a):
     return a[0] + a[1] * x + a[2] * x ** 2 + a[3] * x ** 3
 
 
-def F10(x, a):
-    return a[0] + a[1] * x + a[2] * x ** 2 + a[3] * x ** 3
-
-
-def F01(x, a):
+def F1(x, a):
     return a[1] + 2 * a[2] * x + 3 * a[3] * x ** 2
 
 
-def F11(x, a):
-    return a[1] + 2 * a[2] * x + 3 * a[3] * x ** 2
-
-
-def U0(beta, m, a, alfa):
+def U0(dx, m, a, al):
     result = []
     for x in [xx/m for xx in range(m+1)]:
-        result = result + [alfa[0] * F00(x, a[0]) + alfa[1] * F01(x, a[1]) + beta * alfa[2] * F10(x, a[2]) + beta * alfa[3] * F11(x, a[3])]
+        result.append(sum(al[i] * F0(x, a[i]) for i in [0, 1]) + dx * sum(al[j] * F1(x, a[j]) for j in [2, 3]))
     return result
 
 
@@ -46,9 +38,17 @@ def U(m, x0):
          [0, 0, 0, 1]]
 
     A = np.linalg.solve(F, E).transpose()
+    beta = [rnd() for _ in range(len(x0) * 4)]
+    S = [[1, 0, 0, 0] * len(x0),
+         [0, 0, 1, 0] * len(x0),
+         [0, 1, 0, 0] * len(x0),
+         [0, 0, 0, 1] * len(x0)] * (len(x0) - 1) * 4
+    S = np.array(S)
+    alfa_iter = S.dot(beta)
     #x, U_iter = [], []
     for i in range(len(x0) - 1):
-        alfa = [rnd() + 0.1, rnd() + 0.1, rnd() + 0.1, rnd() + 0.1]
+        alfa = alfa_iter[i * 4:i * 4 + 4]
+        #alfa = [3] * 4
         delta_x = x0[i + 1] - x0[i]
         #x = x + [delta_x * xx/m + x0[i] for xx in range(m+1)]
         #U_iter = U_iter + U0(delta_x, m, A, alfa)
