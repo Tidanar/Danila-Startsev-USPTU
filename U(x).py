@@ -22,7 +22,7 @@ def F1(x, a):
 def U0(dx, m, a, al):
     result = []
     for x in [xx/m for xx in range(m+1)]:
-        result.append(sum(al[i] * F0(x, a[i]) for i in [0, 1]) + dx * sum(al[j] * F1(x, a[j]) for j in [2, 3]))
+        result.append(sum(al[i] * F0(x, a[i]) for i in [0, 1]) + dx * sum(al[j] * F0(x, a[j]) for j in [2, 3]))
     return result
 
 
@@ -48,7 +48,6 @@ def U(m, x0):
     # x, U_iter = [], []
     for i in range(len(x0) - 1):
         alfa = alfa_iter[i * 4:i * 4 + 4]
-        # alfa = [3] * 4
         delta_x = x0[i + 1] - x0[i]
         # x = x + [delta_x * xx/m + x0[i] for xx in range(m+1)]
         # U_iter = U_iter + U0(delta_x, m, A, alfa)
