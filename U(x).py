@@ -11,18 +11,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from random import random as rnd
 
-def F0(x, a):
+def F(x, a):
     return a[0] + a[1] * x + a[2] * x ** 2 + a[3] * x ** 3
-
-
-def F1(x, a):
-    return a[1] + 2 * a[2] * x + 3 * a[3] * x ** 2
 
 
 def U0(dx, m, a, al):
     result = []
     for x in [xx/m for xx in range(m+1)]:
-        result.append(sum(al[i] * F0(x, a[i]) for i in [0, 1]) + dx * sum(al[j] * F0(x, a[j]) for j in [2, 3]))
+        result.append(sum(al[i] * F(x, a[i]) for i in [0, 1]) + dx * sum(al[j] * F(x, a[j]) for j in [2, 3]))
     return result
 
 
@@ -38,12 +34,14 @@ def U(m, x0):
          [0, 0, 0, 1]]
 
     A = np.linalg.solve(F, E).transpose()
-    beta = [rnd() for _ in range(len(x0) * 4)]
-    S = [[1, 0, 0, 0] * len(x0),
-         [0, 0, 1, 0] * len(x0),
-         [0, 1, 0, 0] * len(x0),
-         [0, 0, 0, 1] * len(x0)] * (len(x0) - 1) * 4
-    S = np.array(S)
+    beta = [rnd() for _ in range(len(x0) * 2)]
+    S = np.zeros([len(x0) * 4 - 4, len(beta)])
+    for i in range(len(S)):
+        for j in range(len(S[i])):
+            if ((i % 4 == 0) and (j == i // 2)) or\
+               ((i % 4 == 1) and (j - 2 == (i - 1) // 2)) or\
+               ((i % 4 == 2) and (j - 1 == (i - 2) // 2)) or\
+               ((i % 4 == 3) and (j - 3 == (i - 3) // 2)): S[i, j] = 1
     alfa_iter = S.dot(beta)
     # x, U_iter = [], []
     for i in range(len(x0) - 1):
