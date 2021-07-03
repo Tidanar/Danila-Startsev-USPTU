@@ -22,6 +22,13 @@ def U0(dx, m, a, al):
     return result
 
 
+def integral(C, dx, n, a):
+    for i in range(4):
+        for j in range(4):
+            C[i+4*n, j+4*n] = 4*a[i,2]*a[j,2]*dx + 6*(a[i,3]*a[j,2]+a[i,2]*a[j,3])*(dx**2) + 12*a[i,3]*a[j,3]*(dx**3)
+    return C
+
+
 def U(m, x0):
     F = [[1, 0, 0, 0],
          [1, 1, 1, 1],
@@ -43,10 +50,12 @@ def U(m, x0):
                ((i % 4 == 2) and (j - 1 == (i - 2) // 2)) or\
                ((i % 4 == 3) and (j - 3 == (i - 3) // 2)): S[i, j] = 1
     alfa_iter = S.dot(beta)
+    C = np.zeros([len(x0) * 4 - 4, len(x0) * 4 - 4])
     # x, U_iter = [], []
     for i in range(len(x0) - 1):
         alfa = alfa_iter[i * 4:i * 4 + 4]
         delta_x = x0[i + 1] - x0[i]
+        C = integral(C, delta_x, i, A)
         # x = x + [delta_x * xx/m + x0[i] for xx in range(m+1)]
         # U_iter = U_iter + U0(delta_x, m, A, alfa)
         plt.plot([delta_x * xx/m + x0[i] for xx in range(m+1)], U0(delta_x, m, A, alfa))
