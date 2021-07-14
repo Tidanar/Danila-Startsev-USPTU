@@ -27,11 +27,10 @@ def cs_coefficients(x, y):
     return b.squeeze(), c.squeeze(), d.squeeze()
 
 
-step = 0.01
-x0 = [0, 1, 2, 3, 4, 5]
-y0 = [10, 3, 7, 5, 1, 8]
-y_space = (max(y0) - min(y0)) * 0.05
-plt.axis([x0[0], x0[-1], min(y0) - y_space, max(y0) + y_space])
+step = 0.001
+k = 10
+x0 = list(np.sort(np.random.rand(k)))
+y0 = list(np.random.rand(k))
 b_cs, c_cs, d_cs = cs_coefficients(x0, y0)
 x_iter, y_iter = [], []
 for i in range(len(x0) - 1):
